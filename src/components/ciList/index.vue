@@ -1,31 +1,19 @@
 <template>
     <div class="movie_body">
         <ul>
-            <li>
-                <div class="pic_show"><img src="" alt=""></div>
-                <div class="info_list">
-                    <h2>有名字辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演：陈建兵，任素喜，潘炳龙</p>
-                    <p>今天55家影院放映</p>
+            <li v-for="item in ciList" :key="item.id">
+                <div class="pic_show">
+                    <span>{{ item.nm }}</span>
+                    <span>
+                        <span>{{ item.sellPrice }}</span>元起
+                    </span>
                 </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="" alt=""></div>
                 <div class="info_list">
-                    <h2>有名字辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演：陈建兵，任素喜，潘炳龙</p>
-                    <p>今天55家影院放映</p>
+                    <span>{{ item.addr }}</span>
+                    <span>{{ item.distance }}</span>
                 </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="" alt=""></div>
-                <div class="info_list">
-                    <h2>有名字辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演：陈建兵，任素喜，潘炳龙</p>
-                    <p>今天55家影院放映</p>
+                <div>
+                    <div v-for="(card,i) in item.tag"  v-if="card === 1" :key="i" >{{ key | formatCard }}</div>
                 </div>
             </li>
         </ul>
@@ -34,7 +22,33 @@
 
 <script>
 export default {
-    name:'ciList'
+    name:'ciList',
+    data(){
+        return {
+            ciList: [],
+        }
+    },
+    mounted(){
+        this.axios.get('/api/cinemaList?cityId=10').then(res => {
+            var msg = res.data.msg;
+            if(msg === 'ok') {
+                this.ciList = res.data.data.cinemas;
+            }
+        })
+    },
+    filters:{
+        formatCard(i){
+            var data = [
+                {  key : 'tag', value : '折扣'}
+            ];
+            for (let i = 0; i < data.length; i++) {
+                if(key === data[i].key){
+                    return data[i].value
+                }
+            }
+            return '';
+        }
+    }
 }
 </script>
 <style scoped>
