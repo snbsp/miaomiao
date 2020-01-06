@@ -1,31 +1,15 @@
 <template>
     <div class="movie_body">
         <ul>
-            <li>
-                <div class="pic_show"><img src="" alt=""></div>
-                <div class="info_list">
-                    <h2>有名字辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演：陈建兵，任素喜，潘炳龙</p>
-                    <p>今天55家影院放映</p>
+            <li v-for="item in comingList" :key='item.id'>
+                <div class="pic_show" style="width: 64px;height: 90px;">
+                    <img :src="item.img | setWH('128.180')" alt="" style="width: 100%">
                 </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="" alt=""></div>
-                <div class="info_list">
-                    <h2>有名字辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演：陈建兵，任素喜，潘炳龙</p>
-                    <p>今天55家影院放映</p>
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="" alt=""></div>
-                <div class="info_list">
-                    <h2>有名字辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演：陈建兵，任素喜，潘炳龙</p>
-                    <p>今天55家影院放映</p>
+                <div class="info_list" style="flex:1">
+                    <h2 style="font-size:20px;word-break: break-all;text-overflow: ellipsis;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;">{{item.nm}}</h2>
+                    <p>观众评 <span class="grade">{{item.sc}}</span></p>
+                    <p style="word-break: break-all;text-overflow: ellipsis;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;">主演：{{item.star}}</p>
+                    <p>{{item.showInfo}}</p>
                 </div>
             </li>
         </ul>
@@ -35,7 +19,20 @@
 
 <script>
 export default {
-    name:'commingSoon'
+    name:'commingSoon',
+    data(){
+        return {
+            comingList:[]
+        }
+    },
+    mounted(){
+        this.axios.get('/api/movieComingList?cityId=9').then(res => {
+            var msg = res.data.msg;
+            if(msg === 'ok'){
+                this.comingList = res.data.data.comingList;
+            }
+        })
+    }
 }
 </script>
 
